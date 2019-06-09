@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: twitterlive
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: twitterlive
+  template:
+    metadata:
+      labels:
+        app: twitterlive
+    spec:
+      containers:
+      - name: twitterlive
+        image: tendulkar/twitterlive
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            cpu: 250m
+            memory: 64Mi
+          limits:
+            cpu: 500m
+            memory: 128Mi
+      nodeSelector:
+        kubernetes.io/role: agent
+        beta.kubernetes.io/os: linux
+        type: virtual-kubelet
+      tolerations:
+      - key: virtual-kubelet.io/provider
+        operator: Exists
+      - key: azure.com/aci
+        effect: NoSchedule
